@@ -1,0 +1,378 @@
+@import url('homestyle.css'); /* Keep this to inherit overall site background */
+
+/* Custom properties for the countdown page */
+:root {
+    --card-bg-light: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+    --card-shadow-light: rgba(0, 0, 0, 0.2);
+    --title-color-light: #333;
+    --timer-color-light: #512da8; /* Primary purple */
+    --timer-label-color-light: #666;
+    --button-bg-light: linear-gradient(135deg, #6200ee, #3700b3); /* From your original */
+    --button-hover-bg-light: linear-gradient(135deg, #3700b3, #6200ee);
+    --button-shadow-light: rgba(0, 0, 0, 0.4);
+    --image-shadow-light: rgba(0, 0, 0, 0.6);
+
+    /* Timer glow colors - define here for light mode */
+    --glow-color-1: var(--timer-color-light);
+    --glow-color-2: var(--timer-color-light);
+    --glow-color-3: var(--timer-color-light);
+}
+
+body.dark-mode {
+    --card-bg-dark: rgba(28, 28, 28, 0.95); /* Slightly transparent dark grey */
+    --card-shadow-dark: rgba(0, 0, 0, 0.5);
+    --title-color-dark: #f0f0f0;
+    --timer-color-dark: #bb86fc; /* Lighter purple */
+    --timer-label-color-dark: #bbb;
+    --button-bg-dark: linear-gradient(135deg, #bb86fc, #9a67ea); /* Lighter dark mode button */
+    --button-hover-bg-dark: linear-gradient(135deg, #9a67ea, #bb86fc);
+    --button-shadow-dark: rgba(187, 134, 252, 0.2);
+    --image-shadow-dark: rgba(0, 0, 0, 0.8);
+
+    /* Timer glow colors - redefine for dark mode */
+    --glow-color-1: var(--timer-color-dark);
+    --glow-color-2: var(--timer-color-dark);
+    --glow-color-3: var(--timer-color-dark);
+}
+
+/* Ensure the main container fills the viewport and centers content */
+.countdown-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - var(--navbar-height, 0px) - var(--footer-height, 0px)); /* Adjust based on navbar/footer height */
+    /* Added default 0px for var() for robustness if variables aren't defined elsewhere */
+    padding: 20px; /* Add some padding for smaller screens */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+    /* No background here, it's inherited from homestyle.css */
+}
+
+.countdown-section .container {
+    max-width: 700px; /* Slightly wider container for the card */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#countdown-card { /* Renamed from #countdown-timer */
+    text-align: center;
+    background: var(--card-bg-light);
+    padding: 40px;
+    border-radius: 20px; /* More rounded */
+    box-shadow: 0 15px 30px var(--card-shadow-light); /* Deeper, softer shadow */
+    color: var(--title-color-light); /* Text color for general elements */
+    max-width: 450px; /* Max width for the card */
+    width: 90%;
+    backdrop-filter: blur(12px); /* Stronger blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border for glass effect */
+    animation: fadeInScale 1s ease-out forwards; /* Initial animation */
+    position: relative; /* Needed for pseudo-elements/overlay */
+    overflow: hidden; /* Ensure content stays within border-radius */
+}
+
+body.dark-mode #countdown-card {
+    background: var(--card-bg-dark);
+    box-shadow: 0 15px 30px var(--card-shadow-dark);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+/* Optional: Add a subtle overlay for more modern feel */
+#countdown-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1; /* Ensure it's above background but below content */
+}
+
+body.dark-mode #countdown-card::before {
+    background: linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05));
+}
+
+
+#countdown-card h1 { /* Changed from h2 */
+    font-size: 2.5rem; /* Larger, more prominent title */
+    font-weight: 700;
+    margin-bottom: 25px; /* More space below title */
+    color: var(--title-color-light);
+    letter-spacing: 0.8px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode #countdown-card h1 {
+    color: var(--title-color-dark);
+    text-shadow: none;
+}
+
+.song-title {
+    color: var(--timer-color-light); /* Highlight song title */
+    font-weight: 800;
+}
+
+body.dark-mode .song-title {
+    color: var(--timer-color-dark);
+}
+
+
+#countdown-card img {
+    max-width: 80%; /* Smaller image for better balance */
+    height: auto;
+    border-radius: 12px; /* Slightly less rounded than card */
+    margin: 30px auto; /* More vertical margin, center horizontally */
+    box-shadow: 0 8px 25px var(--image-shadow-light); /* Deeper shadow for image */
+    transform: scale(1);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease; /* Smoother transition */
+    display: block; /* Ensures margin auto works */
+}
+
+#countdown-card img:hover {
+    transform: scale(1.05); /* Slightly larger scale on hover */
+    box-shadow: 0 12px 35px var(--image-shadow-light); /* More pronounced shadow */
+}
+
+body.dark-mode #countdown-card img {
+    box-shadow: 0 8px 25px var(--image-shadow-dark);
+}
+
+body.dark-mode #countdown-card img:hover {
+    box-shadow: 0 12px 35px var(--image-shadow-dark);
+}
+
+
+#timer {
+    font-size: 3.8rem; /* Larger timer font */
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 30px; /* More space below timer */
+    color: var(--timer-color-light); /* Use base color for numbers */
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+    display: flex; /* Use flexbox for countdown items */
+    justify-content: center;
+    gap: 15px; /* Space between items */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    animation: neonGlow 2s infinite alternate; /* New glow animation */
+}
+
+body.dark-mode #timer {
+    color: var(--timer-color-dark); /* Override base color in dark mode */
+    text-shadow: none; /* No shadow in dark mode, rely on glow */
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px; /* Ensure items have a minimum width */
+    line-height: 1; /* Remove extra line height */
+}
+
+.countdown-item .number {
+    font-size: 1.1em; /* Make the number larger than the label */
+    line-height: 1; /* Ensure number takes full height */
+    margin-bottom: 5px; /* Space between number and label */
+}
+
+.countdown-item small {
+    font-size: 0.4em; /* Smaller relative to the number */
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--timer-label-color-light);
+    letter-spacing: 1px;
+}
+
+body.dark-mode .countdown-item small {
+    color: var(--timer-label-color-dark);
+}
+
+/* Style for when countdown is finished */
+#timer.finished-countdown {
+    font-size: 2.2rem; /* Adjust size when finished */
+    letter-spacing: 1px;
+    animation: none; /* Stop glow when finished */
+    color: var(--timer-color-light); /* Keep consistent color */
+    text-shadow: none; /* Ensure no text shadow when finished */
+}
+
+body.dark-mode #timer.finished-countdown {
+    color: var(--timer-color-dark);
+}
+
+
+.presave-link {
+    display: block; /* Make the link block level to center button */
+    margin-top: 30px; /* Space above button */
+    width: 100%; /* Ensure button takes full width within its container */
+}
+
+.btn-primary { /* Changed from btn-presave */
+    padding: 16px 30px; /* Larger padding */
+    background: var(--button-bg-light);
+    border: none;
+    border-radius: 8px; /* Slightly less rounded than card */
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem; /* Larger font */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 15px var(--button-shadow-light); /* Soft shadow */
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    width: 100%; /* Make button fill its container */
+    max-width: 300px; /* Max width for the button */
+    margin: 0 auto; /* Center the button */
+    display: block; /* Ensure margin auto works */
+}
+
+.btn-primary:hover {
+    background: var(--button-hover-bg-light);
+    transform: translateY(-4px); /* More pronounced lift */
+    box-shadow: 0 10px 20px var(--button-shadow-light); /* Deeper shadow on hover */
+}
+
+body.dark-mode .btn-primary {
+    background: var(--button-bg-dark);
+    box-shadow: 0 6px 15px var(--button-shadow-dark);
+}
+
+body.dark-mode .btn-primary:hover {
+    background: var(--button-hover-bg-dark);
+    box-shadow: 0 10px 20px var(--button-shadow-dark);
+}
+
+
+/* --- Animations --- */
+
+/* Removed bgShift as background comes from homestyle.css */
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulseBorder {
+    0% {
+        box-shadow: 0 0 0 0 rgba(81, 45, 168, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(81, 45, 168, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(81, 45, 168, 0);
+    }
+}
+
+/* This is the corrected neonGlow keyframe definition */
+@keyframes neonGlow {
+    0% {
+        /* Use the CSS variables for glow colors */
+        text-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-2), 0 0 15px var(--glow-color-3);
+    }
+    100% {
+        text-shadow: 0 0 10px var(--glow-color-1), 0 0 20px var(--glow-color-2), 0 0 30px var(--glow-color-3);
+    }
+}
+
+
+/* --- Responsive Adjustments --- */
+
+@media (max-width: 768px) {
+    #countdown-card {
+        padding: 30px;
+        border-radius: 15px;
+    }
+
+    #countdown-card h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    #timer {
+        font-size: 3rem;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .countdown-item {
+        min-width: 65px;
+    }
+
+    .countdown-item .number {
+        font-size: 1em; /* Smaller number */
+    }
+
+    .countdown-item small {
+        font-size: 0.35em; /* Smaller label */
+    }
+
+    #countdown-card img {
+        max-width: 90%;
+        margin: 20px auto;
+    }
+
+    .btn-primary {
+        padding: 14px 25px;
+        font-size: 1.1rem;
+    }
+    #timer.finished-countdown {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-section {
+        padding: 15px;
+    }
+    #countdown-card {
+        padding: 25px;
+        border-radius: 12px;
+        width: 100%; /* Take full width on very small screens */
+    }
+
+    #countdown-card h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    #timer {
+        font-size: 2.5rem;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    .countdown-item {
+        min-width: 55px;
+    }
+
+    .countdown-item .number {
+        font-size: 0.9em;
+    }
+
+    .countdown-item small {
+        font-size: 0.3em;
+    }
+
+    #countdown-card img {
+        max-width: 95%;
+        margin: 15px auto;
+    }
+
+    .btn-primary {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+    #timer.finished-countdown {
+        font-size: 1.5rem;
+    }
+}

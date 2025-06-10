@@ -1,0 +1,314 @@
+/* Inherit global styles and background */
+@import url(homestyle.css);
+
+/* --- Variables --- */
+:root {
+    --primary-color-discography: var(--primary-color);
+    --secondary-color-discography: var(--primary-hover-color);
+    --text-color-discography-light: var(--light-text-color);
+    --card-bg-discography-light: var(--light-card-bg);
+    --card-shadow-discography-light: var(--light-card-shadow);
+    --border-color-discography-light: var(--light-card-border);
+    --sparkle-color-discography-light: #ffeb3b; /* Yellow */
+}
+
+/* Dark Mode Variables Override for Discography */
+body.dark-mode {
+    --text-color-discography-light: var(--dark-text-color);
+    --card-bg-discography-light: var(--dark-card-bg);
+    --card-shadow-discography-light: var(--dark-card-shadow);
+    --border-color-discography-light: var(--dark-card-border);
+    --sparkle-color-discography-light: #ffffff; /* White sparkles in dark mode */
+}
+
+/* --- Base Section Styling --- */
+.discography {
+    padding: var(--spacing-xxl) var(--spacing-md);
+}
+
+.discography .container {
+    max-width: 1200px; /* Aligned with homestyle's .container max-width */
+    margin: auto;
+    padding: 0;
+}
+
+.page-title {
+    font-size: 3rem;
+    color: var(--text-color-discography-light);
+    text-align: center;
+    margin-bottom: var(--spacing-xxl);
+    letter-spacing: 1.5px;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* --- Navigation Buttons --- */
+.discography-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-xxl);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.nav-btn {
+    /* Inherit from homestyle's .btn for consistent styling */
+    @extend .btn; /* This is conceptual for a CSS preprocessor, manually applying properties below */
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease-out;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn.active,
+.nav-btn:hover {
+    background-color: var(--primary-hover-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Release Grid --- */
+.release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    transition: opacity 0.5s ease-in-out;
+}
+
+.release-grid.fade-out { opacity: 0; }
+.release-grid.fade-in { opacity: 1; }
+
+.release-grid.single-item-grid {
+    grid-template-columns: minmax(300px, 450px);
+    justify-content: center;
+    gap: 0;
+}
+
+/* --- Individual Release Item --- */
+.release-item {
+    background: var(--card-bg-discography-light);
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 8px 20px var(--card-shadow-discography-light);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease, opacity 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.6s ease-out forwards;
+    border: 1px solid var(--border-color-discography-light);
+    color: var(--text-color-discography-light);
+}
+
+.release-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.release-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px var(--card-shadow-discography-light);
+}
+
+/* Image Wrapper for Sparkles */
+.release-image-wrapper {
+    position: relative;
+    padding-top: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-color-discography-light);
+}
+
+.release-item img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.release-item:hover img { transform: scale(1.08); }
+
+/* Release Info Text */
+.release-info {
+    padding: var(--spacing-lg);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.release-info h3 {
+    font-size: 1.8rem;
+    color: var(--primary-color-discography);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.release-info .release-date,
+.release-info .release-type {
+    font-size: 0.95rem;
+    color: #777;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+body.dark-mode .release-info h3 { color: var(--secondary-color-discography); }
+body.dark-mode .release-info .release-date,
+body.dark-mode .release-info .release-type { color: #bbb; }
+
+.release-info p {
+    font-size: 1rem;
+    color: var(--text-color-discography-light);
+    line-height: 1.6;
+    margin-top: var(--spacing-sm);
+    flex-grow: 1;
+}
+
+/* No Releases Message */
+.no-releases-message {
+    text-align: center;
+    color: var(--text-color-discography-light);
+    font-size: 1.2rem;
+    padding: var(--spacing-xxl) var(--spacing-md);
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+body.dark-mode .no-releases-message { color: var(--text-color-discography-dark); }
+
+/* Sparkle Animation */
+.sparkle {
+    position: absolute;
+    background-color: var(--sparkle-color-discography-light);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    filter: blur(1px);
+    transform: scale(0);
+}
+
+.release-item:hover .sparkle { animation: sparklePop 0.8s ease-out forwards; }
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sparklePop {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1) rotate(180deg); opacity: 0.8; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1024px) {
+    .release-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-lg);
+    }
+    .page-title {
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-xl);
+    }
+    .release-info h3 { font-size: 1.6rem; }
+    .release-info .release-date,
+    .release-info .release-type,
+    .release-info p { font-size: 0.9rem; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .release-grid.single-item-grid { grid-template-columns: minmax(280px, 400px); }
+}
+
+@media (max-width: 768px) {
+    .discography { padding: var(--spacing-xl) var(--spacing-sm); }
+    .page-title {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-lg);
+    }
+    .discography-nav {
+        margin-bottom: var(--spacing-xl);
+        gap: var(--spacing-xs);
+    }
+    .nav-btn {
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: 1rem;
+    }
+    .release-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    .release-item {
+        flex-direction: row;
+        align-items: center;
+        padding: var(--spacing-sm);
+    }
+    .release-image-wrapper {
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+        border-radius: var(--border-radius-md);
+        border-bottom: none;
+        margin-right: var(--spacing-sm);
+    }
+    .release-item img { border-radius: var(--border-radius-md); }
+    .release-info { padding: 0; }
+    .release-info h3 {
+        font-size: 1.4rem;
+        margin-bottom: 5px;
+    }
+    .release-info .release-date,
+    .release-info .release-type {
+        font-size: 0.85rem;
+        margin-bottom: 3px;
+    }
+    .release-info p {
+        font-size: 0.9rem;
+        margin-top: var(--spacing-xs);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (max-width: 480px) {
+    .discography { padding: var(--spacing-lg) var(--spacing-xs); }
+    .page-title {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-md);
+    }
+    .discography-nav {
+        margin-bottom: var(--spacing-lg);
+        gap: 8px;
+    }
+    .nav-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.9rem;
+    }
+    .release-item { padding: var(--spacing-xs); }
+    .release-image-wrapper {
+        width: 100px;
+        height: 100px;
+        margin-right: var(--spacing-xs);
+    }
+    .release-info h3 { font-size: 1.2rem; }
+    .release-info .release-date,
+    .release-info .release-type,
+    .release-info p { font-size: 0.8rem; }
+    .release-info p { -webkit-line-clamp: 2; }
+}

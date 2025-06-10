@@ -1,0 +1,282 @@
+@import url('homestyle.css');
+
+/* --- Variables (Aligned with homestyle.css for consistency) --- */
+:root {
+    /* Main Contact Page Colors */
+    --contact-title-color-light: var(--primary-color); /* Title uses homepage primary color */
+    --contact-subtitle-color-light: var(--light-text-color); /* Subtitle uses homepage general text color */
+    --contact-wrapper-bg-light: var(--light-card-bg); /* Form wrapper background uses homepage card background */
+    --contact-wrapper-shadow-light: var(--light-card-shadow); /* Form wrapper shadow uses homepage card shadow */
+
+    /* Input Field Colors */
+    --input-bg-light: #f8f8f8; /* A very light grey for input fields in light mode */
+    --input-border-light: rgba(0, 0, 0, 0.1); /* Subtle border */
+    --input-focus-border-light: var(--primary-color); /* Focus border uses homepage primary color */
+    --input-placeholder-color-light: #999;
+
+    /* Button Colors (leveraging homestyle's main button variables) */
+    --contact-button-bg-light: var(--primary-color);
+    --contact-button-hover-bg-light: var(--primary-hover-color);
+
+    /* Social Icon Colors */
+    --social-icon-color-light: var(--primary-color); /* Social icons use homepage primary color */
+}
+
+/* Dark Mode Overrides for Contact Page */
+body.dark-mode {
+    --contact-title-color-light: var(--primary-hover-color); /* Dark mode title can use primary hover */
+    --contact-subtitle-color-light: var(--dark-text-color);
+    --contact-wrapper-bg-light: var(--dark-card-bg);
+    --contact-wrapper-shadow-light: var(--dark-card-shadow);
+
+    --input-bg-light: #333; /* Darker background for inputs */
+    --input-border-light: var(--dark-card-border); /* Darker border */
+    --input-focus-border-light: var(--primary-hover-color); /* Dark mode focus border */
+    --input-placeholder-color-light: #888;
+
+    --contact-button-bg-light: var(--primary-hover-color); /* Dark mode button uses primary hover */
+    --contact-button-hover-bg-light: var(--primary-color); /* Dark mode button hover can go back to primary */
+
+    --social-icon-color-light: var(--primary-hover-color); /* Dark mode social icons can use primary hover */
+}
+
+/* --- Contact Section Layout --- */
+.contact-section {
+    padding: var(--spacing-xxl) var(--spacing-md); /* Consistent with other sections using homestyle spacing */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This helps align children, but margin: auto is more robust for max-width elements */
+    justify-content: center;
+    text-align: center;
+    /* Background and global text color inherited from homestyle.css body */
+}
+
+.contact-title {
+    font-size: 3rem;
+    color: var(--contact-title-color-light); /* Uses mapped variable */
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm); /* Use homestyle spacing */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.contact-subtitle {
+    font-size: 1.3rem;
+    color: var(--contact-subtitle-color-light); /* Uses mapped variable */
+    margin-bottom: var(--spacing-xl); /* Increased space before the form, using homestyle spacing */
+    max-width: 700px;
+    line-height: 1.6;
+    margin-left: auto;  /* <<< FIX: Center the subtitle horizontally */
+    margin-right: auto; /* <<< FIX: Center the subtitle horizontally */
+}
+
+/* --- Contact Form Wrapper --- */
+.contact-wrapper {
+    width: 100%;
+    max-width: 600px;
+    background: var(--contact-wrapper-bg-light); /* Uses mapped variable */
+    padding: var(--spacing-xl); /* Increased padding using homestyle spacing */
+    border-radius: var(--border-radius-xl); /* Slightly more rounded corners using homestyle variable */
+    box-shadow: 0 8px 25px var(--contact-wrapper-shadow-light); /* Deeper shadow using mapped variable */
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: var(--spacing-xxl); /* Space between form and social icons using homestyle spacing */
+    margin-left: auto; /* Center the form horizontally */
+    margin-right: auto; /* Center the form horizontally */
+}
+
+/* --- Input Fields --- */
+.input-group {
+    width: 100%;
+    margin-bottom: var(--spacing-md); /* More space between input fields using homestyle spacing */
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: var(--spacing-sm); /* Increased padding for inputs using homestyle spacing */
+    font-size: 1.1rem;
+    border-radius: var(--border-radius-md); /* Use homestyle border-radius */
+    border: 1px solid var(--input-border-light); /* Uses mapped variable */
+    background: var(--input-bg-light); /* Uses mapped variable */
+    color: var(--light-text-color); /* Default text color from homestyle */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+    color: var(--input-placeholder-color-light); /* Uses mapped variable */
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: var(--input-focus-border-light); /* Uses mapped variable */
+    background: var(--light-card-hover-bg); /* Use homestyle hover background for focus */
+    outline: none;
+    /* This shadow assumes you have --primary-color-rgb variable in homestyle.css for RGBA */
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 81, 45, 168), 0.2);
+}
+
+/* --- Submit Button --- */
+button[type="submit"] {
+    width: 100%;
+    padding: var(--spacing-sm); /* Increased padding using homestyle spacing */
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--contact-button-bg-light); /* Uses mapped variable */
+    border: none;
+    border-radius: var(--border-radius-md); /* Use homestyle border-radius */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+button[type="submit"]:hover {
+    background: var(--contact-button-hover-bg-light); /* Uses mapped variable */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode button[type="submit"]:hover {
+    /* This shadow assumes you have --primary-hover-color-rgb variable in homestyle.css for RGBA */
+    box-shadow: 0 8px 15px rgba(var(--primary-hover-color-rgb, 187, 134, 252), 0.15);
+}
+
+/* --- Social Contact Section --- */
+.social-contact {
+    margin-top: var(--spacing-xl); /* Use homestyle spacing */
+}
+
+.social-contact h2 {
+    font-size: 1.8rem;
+    color: var(--contact-title-color-light); /* Uses mapped variable */
+    margin-bottom: var(--spacing-md); /* Use homestyle spacing */
+}
+
+.social-contact p {
+    font-size: 1.1rem;
+    color: var(--contact-subtitle-color-light); /* Uses mapped variable */
+    margin-top: var(--spacing-md); /* Use homestyle spacing */
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md); /* Space between icons using homestyle spacing */
+    margin-top: var(--spacing-sm); /* Use homestyle spacing */
+}
+
+.social-icons a {
+    color: var(--social-icon-color-light); /* Uses mapped variable */
+    font-size: 2.5rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icons a:hover {
+    transform: translateY(-5px) scale(1.1);
+}
+
+/* Specific social icon hover colors (optional, for branding) */
+.social-icons a .fa-youtube:hover {
+    color: #FF0000;
+}
+
+.social-icons a .fa-instagram:hover {
+    color: #C13584;
+}
+
+.social-icons a .fa-spotify:hover {
+    color: #1DB954;
+}
+
+.social-icons a .fa-soundcloud:hover {
+    color: #FF7700;
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1024px) {
+    .contact-section {
+        padding: var(--spacing-xl) var(--spacing-sm); /* Use homestyle spacing */
+    }
+    .contact-title {
+        font-size: 2.5rem;
+    }
+    .contact-subtitle {
+        font-size: 1.15rem;
+        margin-bottom: var(--spacing-lg); /* Use homestyle spacing */
+    }
+    .contact-wrapper {
+        padding: var(--spacing-lg); /* Use homestyle spacing */
+    }
+    .input-group input,
+    .input-group textarea {
+        padding: var(--spacing-sm); /* Use homestyle spacing */
+        font-size: 1rem;
+    }
+    button[type="submit"] {
+        padding: var(--spacing-sm); /* Use homestyle spacing */
+        font-size: 1.1rem;
+    }
+    .social-contact h2 {
+        font-size: 1.6rem;
+    }
+    .social-icons a {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-section {
+        padding: var(--spacing-xl) var(--spacing-sm); /* Use homestyle spacing */
+    }
+    .contact-title {
+        font-size: 2.2rem;
+        margin-bottom: var(--spacing-xs); /* Use homestyle spacing */
+    }
+    .contact-subtitle {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-md); /* Use homestyle spacing */
+    }
+    .contact-wrapper {
+        padding: var(--spacing-md); /* Use homestyle spacing */
+        border-radius: var(--border-radius-lg); /* Use homestyle border-radius */
+    }
+    .input-group {
+        margin-bottom: var(--spacing-sm); /* Use homestyle spacing */
+    }
+    .social-contact h2 {
+        font-size: 1.4rem;
+    }
+    .social-icons a {
+        font-size: 2rem;
+        gap: var(--spacing-md); /* Use homestyle spacing */
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-title {
+        font-size: 1.8rem;
+    }
+    .contact-subtitle {
+        font-size: 0.95rem;
+    }
+    .contact-wrapper {
+        padding: var(--spacing-md); /* Use homestyle spacing */
+    }
+    .input-group input,
+    .input-group textarea {
+        padding: var(--spacing-xs); /* Use homestyle spacing */
+        font-size: 0.9rem;
+    }
+    button[type="submit"] {
+        padding: var(--spacing-xs); /* Use homestyle spacing */
+        font-size: 1rem;
+    }
+    .social-icons a {
+        font-size: 1.8rem;
+        gap: var(--spacing-sm); /* Use homestyle spacing */
+    }
+}

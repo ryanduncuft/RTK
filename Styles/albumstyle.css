@@ -1,0 +1,515 @@
+@import url(homestyle.css); /* Keep this for navbar and global styles */
+
+/* Root variables for theming */
+:root {
+    --primary-color: #6e43ff;
+    --secondary-color: #5c6bc0;
+    --accent-color: #8c71ff;
+    --text-color-dark: #eee;
+    --text-color-light: #444;
+    --bg-dark: #1a1a1a;
+    --bg-light: #f0f0f0;
+    --card-bg-dark: rgba(25, 25, 25, 0.7);
+    --card-bg-light: rgba(255, 255, 255, 0.8);
+    --border-dark: rgba(255, 255, 255, 0.1);
+    --border-light: rgba(0, 0, 0, 0.1);
+    --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark mode default */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-color-dark);
+    font-family: sans-serif; /* Ensure a fallback font */
+}
+
+/* Light mode override */
+body:not(.dark-mode) {
+    background-color: var(--bg-light);
+    color: var(--text-color-light);
+}
+
+/* Background Animations */
+@keyframes backgroundGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes backgroundGradientDark {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Fade-in Animation */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- General Layout and Containers --- */
+.album-page-content {
+    padding-bottom: 50px;
+}
+
+.album-page-content .container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+
+.album-hero-section {
+    display: flex;
+    flex-direction: row; /* Desktop: Side-by-side */
+    gap: 60px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px;
+    border-radius: 25px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--border-dark);
+    box-shadow: var(--shadow-dark);
+    background: var(--card-bg-dark);
+    transition: all 0.5s ease;
+}
+
+body:not(.dark-mode) .album-hero-section {
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-light);
+    background: var(--card-bg-light);
+}
+
+/* --- Album Visuals (Cover & Button) --- */
+.album-visuals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    flex-shrink: 0;
+    width: 100%; /* Ensure it scales for mobile */
+    max-width: 380px; /* Limit for desktop */
+}
+
+/* Album Cover Tilt Effect */
+.album-cover-tilt-effect {
+    position: relative;
+    display: inline-block;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    width: 100%; /* Ensure tilt effect container scales */
+}
+
+.album-cover-tilt-effect img {
+    width: 100%; /* Make image responsive */
+    max-width: 380px; /* Larger cover size for desktop */
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 80px rgba(110, 67, 255, 0.3);
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease-out;
+    display: block;
+    border: 3px solid var(--border-dark);
+    margin: 0 auto;
+}
+
+body:not(.dark-mode) .album-cover-tilt-effect img {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 60px rgba(110, 67, 255, 0.15);
+    border: 3px solid var(--border-light);
+}
+
+.album-cover-tilt-effect:hover img {
+    transform: rotateY(12deg) rotateX(8deg) scale(1.06);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 100px rgba(110, 67, 255, 0.5);
+}
+
+body:not(.dark-mode) .album-cover-tilt-effect:hover img {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 80px rgba(110, 67, 255, 0.25);
+}
+
+.listen-now-btn {
+    padding: 18px 40px; /* Larger button for desktop */
+    font-size: 1.2em;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    display: inline-flex; /* Use inline-flex for proper centering of icon/text */
+    align-items: center;
+    justify-content: center;
+}
+
+body:not(.dark-mode) .listen-now-btn {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.listen-now-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-7px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+}
+
+body:not(.dark-mode) .listen-now-btn:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.listen-now-btn i {
+    margin-right: 15px; /* Desktop icon margin */
+    font-size: 1.3em;
+}
+
+/* --- Album Details Panel (Title, Tracklist, Credits) --- */
+.album-details-panel {
+    flex-grow: 1;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    text-align: left;
+}
+
+.album-title {
+    font-size: 4.5rem;
+    margin-bottom: 5px;
+    line-height: 1.1;
+    text-shadow: 0 0 15px rgba(110, 67, 255, 0.4);
+    color: #fff;
+    letter-spacing: -1px;
+}
+
+body:not(.dark-mode) .album-title {
+    color: #333;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.album-artist {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    margin-top: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+body:not(.dark-mode) .album-artist {
+    color: var(--primary-color);
+}
+
+/* Section Headings */
+.section-heading {
+    font-size: 2.8rem;
+    color: var(--accent-color);
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+body:not(.dark-mode) .section-heading {
+    color: var(--primary-color);
+}
+
+.section-heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: width 0.3s ease-out;
+}
+
+.album-hero-section:hover .section-heading::after {
+    width: 100%;
+}
+
+/* --- Tracklist Grid --- */
+.tracklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding-right: 0;
+    overflow-y: visible;
+}
+
+/* Track Button Design */
+.track-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, rgba(110, 67, 255, 0.2), rgba(130, 80, 255, 0.1));
+    color: var(--text-color-dark);
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1em;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+body:not(.dark-mode) .track-button {
+    background: linear-gradient(135deg, rgba(110, 67, 255, 0.05), rgba(130, 80, 255, 0.02));
+    color: var(--text-color-light);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Track button hover (glowing border, slide effect) */
+.track-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+    z-index: -1;
+}
+
+.track-button:hover::before {
+    left: 100%;
+}
+
+.track-button:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 20px var(--primary-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+body:not(.dark-mode) .track-button:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 15px var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+/* --- Credits Section --- */
+.credits-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-color-dark);
+}
+
+body:not(.dark-mode) .credits-text {
+    color: var(--text-color-light);
+}
+
+.credits-text p {
+    margin-bottom: 8px;
+}
+
+.credits-text strong {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+body:not(.dark-mode) .credits-text strong {
+    color: var(--primary-color);
+}
+
+/* Initial hidden state for fade-in animations */
+.album-visuals,
+.album-details-panel > div {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInSlideUp 0.8s ease-out forwards;
+}
+
+/* Staggered animation delays */
+.album-visuals { animation-delay: 0.2s; }
+.tracklist-section { animation-delay: 0.4s; }
+.credits-section { animation-delay: 0.6s; }
+
+/* General utility class for hiding elements if data is missing */
+.hidden {
+    display: none !important;
+}
+
+/* ## Responsive Adjustments */
+
+/*These media queries ensure the page adapts beautifully to various screen sizes while maintaining the core design. */
+
+@media (max-width: 1024px) { /* Tablets and smaller laptops */
+    .album-hero-section {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center;
+        text-align: center;
+        padding: 40px;
+        gap: 40px;
+    }
+
+    .album-visuals {
+        max-width: 300px; /* Keep album cover contained on tablets */
+        width: 100%;
+    }
+
+    .album-details-panel {
+        text-align: center; /* Center text when stacked */
+        max-width: 700px; /* Allow panel to be a bit wider on tablets */
+    }
+
+    .album-title {
+        font-size: 3.8rem;
+    }
+
+    .album-artist {
+        font-size: 1.6rem;
+    }
+
+    .section-heading {
+        font-size: 2.2rem;
+    }
+
+    .section-heading::after {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px; /* Keep underline width consistent or adjust as desired */
+    }
+
+    .album-hero-section:hover .section-heading::after {
+        width: 100%; /* Still expand on hover */
+        left: 0;
+        transform: none;
+    }
+
+    .tracklist-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust grid for tablets */
+    }
+
+    .track-button {
+        justify-content: center; /* Center track buttons on tablets */
+    }
+
+    /* Listen Now Button specific for tablets */
+    .listen-now-btn {
+        padding: 16px 30px; /* Slightly smaller padding */
+        font-size: 1.1em; /* Slightly smaller font size */
+        width: 100%; /* Take full width within its container */
+        max-width: 300px; /* Limit max width */
+    }
+
+    .listen-now-btn i {
+        margin-right: 10px; /* Adjust icon margin */
+    }
+}
+
+@media (max-width: 768px) { /* Medium mobile devices (e.g., larger phones in landscape, smaller tablets) */
+    .album-page-content .container {
+        margin: 30px auto; /* Less vertical margin */
+        padding: 0 15px; /* Smaller horizontal padding */
+        gap: 30px; /* Less gap when stacked */
+    }
+
+    .album-hero-section {
+        padding: 30px 20px; /* Smaller padding inside the card */
+        gap: 30px;
+    }
+
+    .album-visuals {
+        max-width: 280px; /* Slightly smaller album cover */
+    }
+
+    .album-details-panel {
+        padding: 0 10px; /* Add some padding around the panel content itself */
+    }
+
+    .album-title {
+        font-size: 3rem; /* Smaller title for mobile */
+        word-break: break-word; /* Ensure long titles wrap */
+    }
+
+    .album-artist {
+        font-size: 1.4rem; /* Smaller artist name */
+    }
+
+    .section-heading {
+        font-size: 1.8rem; /* Smaller section headings */
+        margin-bottom: 20px;
+    }
+
+    .section-heading::after {
+        width: 60px; /* Smaller underline for mobile */
+    }
+
+    .tracklist-grid {
+        grid-template-columns: 1fr; /* Single column for tracks on most phones */
+        gap: 10px; /* Reduced gap */
+    }
+
+    .track-button {
+        padding: 14px 20px; /* Maintain decent tap target size */
+        font-size: 1em;
+    }
+
+    .credits-text {
+        font-size: 0.95rem; /* Slightly smaller text for credits */
+    }
+
+    /* Listen Now Button specific for medium mobile */
+    .listen-now-btn {
+        font-size: 1em; /* Smaller font size */
+        padding: 14px 25px; /* Reduced padding */
+    }
+}
+
+@media (max-width: 480px) { /* Smaller mobile devices (e.g., standard phones in portrait) */
+    .album-page-content .container {
+        padding: 0 10px; /* Even smaller horizontal padding */
+    }
+
+    .album-hero-section {
+        padding: 25px 15px; /* Even smaller padding inside the card */
+    }
+
+    .album-visuals {
+        max-width: 250px; /* Fit very small screens */
+    }
+
+    .album-title {
+        font-size: 2.5rem; /* Even smaller title */
+    }
+
+    .album-artist {
+        font-size: 1.2rem;
+    }
+
+    .section-heading {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+    }
+
+    .section-heading::after {
+        width: 50px; /* Even smaller underline */
+    }
+
+    /* Listen Now Button specific for small mobile */
+    .listen-now-btn {
+        font-size: 0.95em; /* Smallest font size for button */
+        padding: 12px 20px; /* Smallest padding */
+    }
+}

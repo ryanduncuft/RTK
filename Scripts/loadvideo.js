@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const gistUrlBase = 'https://gist.githubusercontent.com/ryzethakiddofficial/d67c1848410f5d6a77d914794848bc7d/raw/video_link.json';
+    const gistUrlBase = 'https://gist.githubusercontent.com/ryanduncuft/d67c1848410f5d6a77d914794848bc7d/raw/video_link.json';
     const videoEmbedContainer = document.getElementById('video-embed-container');
 
     // Add a cache-busting parameter (current timestamp)

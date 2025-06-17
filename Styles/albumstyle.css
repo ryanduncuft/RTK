@@ -1,63 +1,64 @@
-@import url(homestyle.css); /* Keep this for navbar and global styles */
+@import url(homestyle.css); /* My note: Keeping this to inherit global styles like font, colors, etc. */
 
-/* Root variables for theming */
+/* --- Root Variables for Theming --- */
 :root {
+    /* Main palette, using homestyle primary/hover as core. */
     --primary-color: #6e43ff;
     --secondary-color: #5c6bc0;
-    --accent-color: #8c71ff;
+    --accent-color: #8c71ff; /* For highlights */
+
+    /* Text Colors */
     --text-color-dark: #eee;
     --text-color-light: #444;
+
+    /* Backgrounds */
     --bg-dark: #1a1a1a;
     --bg-light: #f0f0f0;
+
+    /* Card/Panel Backgrounds (semi-transparent for blur effect) */
     --card-bg-dark: rgba(25, 25, 25, 0.7);
     --card-bg-light: rgba(255, 255, 255, 0.8);
+
+    /* Borders */
     --border-dark: rgba(255, 255, 255, 0.1);
     --border-light: rgba(0, 0, 0, 0.1);
+
+    /* Shadows */
     --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.6);
     --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Dark mode default */
+/* --- Base Styles & Theme Defaults --- */
+/* My note: Dark mode is the default, light mode overrides specific properties. */
 body {
     background-color: var(--bg-dark);
     color: var(--text-color-dark);
-    font-family: sans-serif; /* Ensure a fallback font */
+    font-family: var(--main-font-family, sans-serif); /* Use homestyle font, with fallback */
 }
 
-/* Light mode override */
+/* My note: Override colors for light mode. */
 body:not(.dark-mode) {
     background-color: var(--bg-light);
     color: var(--text-color-light);
 }
 
-/* Background Animations */
+/* --- Animations --- */
+/* My note: Background gradient animation for a subtle effect. */
 @keyframes backgroundGradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-@keyframes backgroundGradientDark {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Fade-in Animation */
+/* My note: Fade-in and slide-up animation for elements. */
 @keyframes fadeInSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- General Layout and Containers --- */
+/* --- General Layout & Containers --- */
 .album-page-content {
-    padding-bottom: 50px;
+    padding-bottom: 50px; /* Space below main content */
 }
 
 .album-page-content .container {
@@ -67,19 +68,20 @@ body:not(.dark-mode) {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 60px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 60px; /* Space between main sections */
 }
 
+/* My note: The main hero section containing album visuals and details. */
 .album-hero-section {
     display: flex;
-    flex-direction: row; /* Desktop: Side-by-side */
+    flex-direction: row; /* Desktop: side-by-side layout */
     gap: 60px;
     justify-content: center;
     align-items: flex-start;
     padding: 50px;
     border-radius: 25px;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px); /* Frosty glass effect */
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--border-dark);
     box-shadow: var(--shadow-dark);
@@ -87,6 +89,7 @@ body:not(.dark-mode) {
     transition: all 0.5s ease;
 }
 
+/* My note: Light mode specific styles for the hero section. */
 body:not(.dark-mode) .album-hero-section {
     border: 1px solid var(--border-light);
     box-shadow: var(--shadow-light);
@@ -94,42 +97,45 @@ body:not(.dark-mode) .album-hero-section {
 }
 
 /* --- Album Visuals (Cover & Button) --- */
+/* My note: Container for the album cover and the 'Listen Now' button. */
 .album-visuals {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 30px;
-    flex-shrink: 0;
-    width: 100%; /* Ensure it scales for mobile */
-    max-width: 380px; /* Limit for desktop */
+    flex-shrink: 0; /* Prevents shrinking too much */
+    width: 100%; /* Default to full width for mobile responsiveness */
+    max-width: 380px; /* Max width for desktop */
 }
 
-/* Album Cover Tilt Effect */
+/* My note: Wrapper for the album cover with a fancy tilt effect. */
 .album-cover-tilt-effect {
     position: relative;
     display: inline-block;
-    perspective: 1000px;
+    perspective: 1000px; /* Enables 3D transforms */
     transform-style: preserve-3d;
-    width: 100%; /* Ensure tilt effect container scales */
+    width: 100%; /* Ensures it scales */
 }
 
 .album-cover-tilt-effect img {
-    width: 100%; /* Make image responsive */
-    max-width: 380px; /* Larger cover size for desktop */
+    width: 100%;
+    max-width: 380px; /* Desktop size */
     height: auto;
     border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 80px rgba(110, 67, 255, 0.3);
-    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease-out;
-    display: block;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 80px rgba(110, 67, 255, 0.3); /* Main shadow and glowing effect */
     border: 3px solid var(--border-dark);
     margin: 0 auto;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease-out;
 }
 
+/* My note: Light mode shadows and border for the album cover. */
 body:not(.dark-mode) .album-cover-tilt-effect img {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 60px rgba(110, 67, 255, 0.15);
     border: 3px solid var(--border-light);
 }
 
+/* My note: Hover effect for the album cover (tilt and enhanced shadow). */
 .album-cover-tilt-effect:hover img {
     transform: rotateY(12deg) rotateX(8deg) scale(1.06);
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 100px rgba(110, 67, 255, 0.5);
@@ -139,8 +145,9 @@ body:not(.dark-mode) .album-cover-tilt-effect:hover img {
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 80px rgba(110, 67, 255, 0.25);
 }
 
+/* My note: Styling for the main call-to-action button. */
 .listen-now-btn {
-    padding: 18px 40px; /* Larger button for desktop */
+    padding: 18px 40px;
     font-size: 1.2em;
     background-color: var(--primary-color);
     color: #fff;
@@ -149,10 +156,10 @@ body:not(.dark-mode) .album-cover-tilt-effect:hover img {
     font-weight: 700;
     letter-spacing: 1px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    display: inline-flex; /* Use inline-flex for proper centering of icon/text */
+    display: inline-flex; /* Allows icon and text to align */
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 body:not(.dark-mode) .listen-now-btn {
@@ -170,17 +177,18 @@ body:not(.dark-mode) .listen-now-btn:hover {
 }
 
 .listen-now-btn i {
-    margin-right: 15px; /* Desktop icon margin */
+    margin-right: 15px;
     font-size: 1.3em;
 }
 
 /* --- Album Details Panel (Title, Tracklist, Credits) --- */
+/* My note: Container for album metadata and lists. */
 .album-details-panel {
-    flex-grow: 1;
+    flex-grow: 1; /* Takes available space */
     max-width: 600px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 40px; /* Space between sections (title, tracklist, credits) */
     text-align: left;
 }
 
@@ -188,9 +196,9 @@ body:not(.dark-mode) .listen-now-btn:hover {
     font-size: 4.5rem;
     margin-bottom: 5px;
     line-height: 1.1;
-    text-shadow: 0 0 15px rgba(110, 67, 255, 0.4);
     color: #fff;
     letter-spacing: -1px;
+    text-shadow: 0 0 15px rgba(110, 67, 255, 0.4); /* Subtle glow effect */
 }
 
 body:not(.dark-mode) .album-title {
@@ -210,7 +218,7 @@ body:not(.dark-mode) .album-artist {
     color: var(--primary-color);
 }
 
-/* Section Headings */
+/* My note: Generic heading style for sections like Tracklist and Credits. */
 .section-heading {
     font-size: 2.8rem;
     color: var(--accent-color);
@@ -218,7 +226,7 @@ body:not(.dark-mode) .album-artist {
     text-transform: uppercase;
     letter-spacing: 2px;
     position: relative;
-    display: inline-block;
+    display: inline-block; /* Allows width for ::after pseudo-element */
     padding-bottom: 10px;
 }
 
@@ -226,18 +234,20 @@ body:not(.dark-mode) .section-heading {
     color: var(--primary-color);
 }
 
+/* My note: Underline animation for section headings. */
 .section-heading::after {
     content: '';
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 80px;
+    width: 80px; /* Initial width */
     height: 4px;
     background-color: var(--primary-color);
     border-radius: 2px;
     transition: width 0.3s ease-out;
 }
 
+/* My note: Expand underline on hover of the parent hero section. */
 .album-hero-section:hover .section-heading::after {
     width: 100%;
 }
@@ -247,11 +257,10 @@ body:not(.dark-mode) .section-heading {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
-    padding-right: 0;
-    overflow-y: visible;
+    overflow-y: visible; /* Ensure content is not cut off */
 }
 
-/* Track Button Design */
+/* My note: Styling for individual track buttons. */
 .track-button {
     display: flex;
     align-items: center;
@@ -265,10 +274,10 @@ body:not(.dark-mode) .section-heading {
     font-size: 1.1em;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    overflow: hidden;
+    overflow: hidden; /* For the ::before effect */
     position: relative;
-    z-index: 1;
+    z-index: 1; /* For stacking context with ::before */
+    transition: all 0.3s ease;
 }
 
 body:not(.dark-mode) .track-button {
@@ -278,7 +287,7 @@ body:not(.dark-mode) .track-button {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Track button hover (glowing border, slide effect) */
+/* My note: Shine/slide effect on track button hover. */
 .track-button::before {
     content: '';
     position: absolute;
@@ -287,14 +296,15 @@ body:not(.dark-mode) .track-button {
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s ease;
     z-index: -1;
+    transition: left 0.5s ease;
 }
 
 .track-button:hover::before {
     left: 100%;
 }
 
+/* My note: Hover state for track buttons (lift, shadow, border glow). */
 .track-button:hover {
     transform: translateY(-5px) scale(1.02);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 20px var(--primary-color);
@@ -319,9 +329,7 @@ body:not(.dark-mode) .credits-text {
     color: var(--text-color-light);
 }
 
-.credits-text p {
-    margin-bottom: 8px;
-}
+.credits-text p { margin-bottom: 8px; }
 
 .credits-text strong {
     color: var(--accent-color);
@@ -332,31 +340,28 @@ body:not(.dark-mode) .credits-text strong {
     color: var(--primary-color);
 }
 
-/* Initial hidden state for fade-in animations */
+/* --- Entry Animations for Sections --- */
+/* My note: Make sections fade in and slide up when the page loads. */
 .album-visuals,
-.album-details-panel > div {
+.album-details-panel > div { /* Apply to direct children of details panel */
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInSlideUp 0.8s ease-out forwards;
 }
 
-/* Staggered animation delays */
+/* My note: Stagger the animations for a smoother effect. */
 .album-visuals { animation-delay: 0.2s; }
 .tracklist-section { animation-delay: 0.4s; }
 .credits-section { animation-delay: 0.6s; }
 
-/* General utility class for hiding elements if data is missing */
-.hidden {
-    display: none !important;
-}
+/* My note: Utility class to hide elements if content isn't available. */
+.hidden { display: none !important; }
 
-/* ## Responsive Adjustments */
-
-/*These media queries ensure the page adapts beautifully to various screen sizes while maintaining the core design. */
+/* My note: These media queries ensure the page adapts beautifully to various screen sizes while maintaining the core design. */
 
 @media (max-width: 1024px) { /* Tablets and smaller laptops */
     .album-hero-section {
-        flex-direction: column; /* Stack elements vertically */
+        flex-direction: column; /* Stack elements vertically on tablets */
         align-items: center;
         text-align: center;
         padding: 40px;
@@ -373,22 +378,15 @@ body:not(.dark-mode) .credits-text strong {
         max-width: 700px; /* Allow panel to be a bit wider on tablets */
     }
 
-    .album-title {
-        font-size: 3.8rem;
-    }
+    .album-title { font-size: 3.8rem; }
+    .album-artist { font-size: 1.6rem; }
+    .section-heading { font-size: 2.2rem; }
 
-    .album-artist {
-        font-size: 1.6rem;
-    }
-
-    .section-heading {
-        font-size: 2.2rem;
-    }
-
+    /* My note: Adjust heading underline centering for stacked layout. */
     .section-heading::after {
         left: 50%;
         transform: translateX(-50%);
-        width: 80px; /* Keep underline width consistent or adjust as desired */
+        width: 80px;
     }
 
     .album-hero-section:hover .section-heading::after {
@@ -405,111 +403,79 @@ body:not(.dark-mode) .credits-text strong {
         justify-content: center; /* Center track buttons on tablets */
     }
 
-    /* Listen Now Button specific for tablets */
+    /* My note: Listen Now Button specific adjustments for tablets. */
     .listen-now-btn {
-        padding: 16px 30px; /* Slightly smaller padding */
-        font-size: 1.1em; /* Slightly smaller font size */
+        padding: 16px 30px;
+        font-size: 1.1em;
         width: 100%; /* Take full width within its container */
         max-width: 300px; /* Limit max width */
     }
 
-    .listen-now-btn i {
-        margin-right: 10px; /* Adjust icon margin */
-    }
+    .listen-now-btn i { margin-right: 10px; }
 }
 
-@media (max-width: 768px) { /* Medium mobile devices (e.g., larger phones in landscape, smaller tablets) */
+@media (max-width: 768px) { /* Medium mobile devices (e.g., larger phones, smaller tablets) */
     .album-page-content .container {
-        margin: 30px auto; /* Less vertical margin */
-        padding: 0 15px; /* Smaller horizontal padding */
-        gap: 30px; /* Less gap when stacked */
-    }
-
-    .album-hero-section {
-        padding: 30px 20px; /* Smaller padding inside the card */
+        margin: 30px auto;
+        padding: 0 15px;
         gap: 30px;
     }
 
-    .album-visuals {
-        max-width: 280px; /* Slightly smaller album cover */
+    .album-hero-section {
+        padding: 30px 20px;
+        gap: 30px;
     }
 
-    .album-details-panel {
-        padding: 0 10px; /* Add some padding around the panel content itself */
-    }
+    .album-visuals { max-width: 280px; }
+    .album-details-panel { padding: 0 10px; }
 
     .album-title {
-        font-size: 3rem; /* Smaller title for mobile */
-        word-break: break-word; /* Ensure long titles wrap */
+        font-size: 3rem;
+        word-break: break-word; /* Important for long titles on small screens */
     }
 
-    .album-artist {
-        font-size: 1.4rem; /* Smaller artist name */
-    }
-
+    .album-artist { font-size: 1.4rem; }
     .section-heading {
-        font-size: 1.8rem; /* Smaller section headings */
+        font-size: 1.8rem;
         margin-bottom: 20px;
     }
-
-    .section-heading::after {
-        width: 60px; /* Smaller underline for mobile */
-    }
+    .section-heading::after { width: 60px; }
 
     .tracklist-grid {
         grid-template-columns: 1fr; /* Single column for tracks on most phones */
-        gap: 10px; /* Reduced gap */
+        gap: 10px;
     }
 
     .track-button {
-        padding: 14px 20px; /* Maintain decent tap target size */
+        padding: 14px 20px;
         font-size: 1em;
     }
 
-    .credits-text {
-        font-size: 0.95rem; /* Slightly smaller text for credits */
-    }
+    .credits-text { font-size: 0.95rem; }
 
-    /* Listen Now Button specific for medium mobile */
+    /* My note: Listen Now Button specific for medium mobile. */
     .listen-now-btn {
-        font-size: 1em; /* Smaller font size */
-        padding: 14px 25px; /* Reduced padding */
+        font-size: 1em;
+        padding: 14px 25px;
     }
 }
 
 @media (max-width: 480px) { /* Smaller mobile devices (e.g., standard phones in portrait) */
-    .album-page-content .container {
-        padding: 0 10px; /* Even smaller horizontal padding */
-    }
+    .album-page-content .container { padding: 0 10px; }
+    .album-hero-section { padding: 25px 15px; }
+    .album-visuals { max-width: 250px; }
 
-    .album-hero-section {
-        padding: 25px 15px; /* Even smaller padding inside the card */
-    }
-
-    .album-visuals {
-        max-width: 250px; /* Fit very small screens */
-    }
-
-    .album-title {
-        font-size: 2.5rem; /* Even smaller title */
-    }
-
-    .album-artist {
-        font-size: 1.2rem;
-    }
-
+    .album-title { font-size: 2.5rem; }
+    .album-artist { font-size: 1.2rem; }
     .section-heading {
         font-size: 1.6rem;
         margin-bottom: 15px;
     }
+    .section-heading::after { width: 50px; }
 
-    .section-heading::after {
-        width: 50px; /* Even smaller underline */
-    }
-
-    /* Listen Now Button specific for small mobile */
+    /* My note: Listen Now Button specific for small mobile. */
     .listen-now-btn {
-        font-size: 0.95em; /* Smallest font size for button */
-        padding: 12px 20px; /* Smallest padding */
+        font-size: 0.95em;
+        padding: 12px 20px;
     }
 }

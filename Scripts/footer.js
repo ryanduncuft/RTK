@@ -1,42 +1,70 @@
-//footer.js
+// My notes:
+// - Tries to load the footer HTML from a few possible locations.
+// - Once loaded, it puts the HTML into the 'footer' div.
+// - It also updates the copyright year and applies dark mode if needed.
 
-const footerPathsToTry = [
-    '/footer.html',            // absolute path to root
-    './footer.html',           // relative (current folder)
-    '../footer.html',          // one level up
-    '../../footer.html',       // two levels up
-    '../../../footer.html',    // three levels up
+const footerPathsToTry =
+[
+    '/footer.html',       // From the very top of the site
+    './footer.html',      // In the same folder as the current page
+    '../footer.html',     // One folder up
+    '../../footer.html',  // Two folders up
+    '../../../footer.html', // Three folders up
 ];
 
-async function loadFooter() {
-    for (const path of footerPathsToTry) {
-        try {
-            const res = await fetch(path);
-            if (res.ok) {
-                const data = await res.text();
-                document.getElementById("footer").innerHTML = data;
-                // CALL updateCurrentYear() HERE, after the content is loaded
+/**
+ * Note: This function tries to load the footer from different paths until it succeeds.
+ * After loading, it updates the year and sets the dark mode.
+ */
+async function loadFooter()
+{
+    for (const path of footerPathsToTry)
+    {
+        try
+        {
+            const response = await fetch(path);
+
+            // If we found the footer HTML
+            if (response.ok)
+            {
+                const footerHtml = await response.text();
+                // Put the footer HTML into the 'footer' div
+                document.getElementById("footer").innerHTML = footerHtml;
+
+                // Update the copyright year
                 updateCurrentYear();
-                return; // Stop after successful load
+
+                // If dark mode is active, apply its styles to the new footer
+                if (typeof window.applyDarkModeClasses === 'function')
+                {
+                    window.applyDarkModeClasses();
+                }
+                return; // Stop trying paths, we found it!
             }
-        } catch (e) {
-            console.warn(`Failed to fetch footer from ${path}:`, e); // Log for debugging
+        }
+        
+        catch (error)
+        {
+            // Log if a path fails, but keep trying others
+            console.warn(`Couldn't load footer from ${path}:`, error);
         }
     }
-    console.error("Failed to load footer from all tried paths.");
+
+    // If we tried all paths and failed
+    console.error("Failed to load the footer from any of the specified paths.");
 }
 
-// Function to update the current year in the footer
-function updateCurrentYear() {
+/**
+ * Note: This function finds the 'current-year' element and updates it to the current year.
+ */
+function updateCurrentYear()
+{
     const currentYearSpan = document.getElementById('current-year');
-    if (currentYearSpan) {
+    if (currentYearSpan)
+    {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 }
 
-// This line handles calling loadFooter once the DOM is ready.
-// You no longer need the direct loadFooter() call.
+// When the entire page is loaded, start loading the footer.
 document.addEventListener('DOMContentLoaded', loadFooter);
-
-// REMOVE THE LINE BELOW:
-// loadFooter();

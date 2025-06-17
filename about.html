@@ -76,12 +76,11 @@
 
             <main class="about-page-main"> <div class="container wikipedia-layout"> <aside class="infobox">
                         <div class="infobox-header">
-                            <img src="Images/profile.jpg" alt="Portrait of Ryze Tha Kidd" loading="lazy"> <h2 class="infobox-title">Ryze Tha Kidd</h2>
+                            <img src="Images/me.jpg" alt="Portrait of Ryze Tha Kidd" loading="lazy"> <h2 class="infobox-title">Ryze Tha Kidd</h2>
                             <p class="infobox-subtitle">British Rapper, Singer/Songwriter</p>
                         </div>
                         <ul class="infobox-details">
-                            <li><strong>Born:</strong> Ryan William Duncuft (2007-09-15) <br> (age 16) Manchester, UK</li>
-                            <li><strong>Origin:</strong> Mossley, Greater Manchester, UK</li>
+                            <li><strong>Born:</strong> Ryan William Duncuft (2007-09-15) <br> (<span id="current-age">Loading age...</span>) <a href="https://en.wikipedia.org/wiki/Mossley">Mossley, Manchester, UK</a></li>
                             <li><strong>Genres:</strong> Hip Hop, Emo Rap, Trap</li>
                             <li><strong>Occupation(s):</strong> Rapper, Singer/Songwriter</li>
                             <li><strong>Years active:</strong> 2019–present</li>
@@ -123,6 +122,83 @@
             <div id="footer"></div>
         </div>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', () =>
+            {
+                const birthDate = new Date('2007-09-15T00:00:00'); // Use ISO format for consistent parsing (YYYY-MM-DDTHH:mm:ss)
+                const ageElement = document.getElementById('current-age');
+
+                if (!ageElement) {
+                    console.error('Element with ID "current-age" not found. Cannot update age.');
+                    return;
+                }
+
+                function calculateAndDisplayAge() {
+                    const now = new Date();
+                
+                    // Calculate years
+                    let years = now.getFullYear() - birthDate.getFullYear();
+                    let months = now.getMonth() - birthDate.getMonth();
+                    let days = now.getDate() - birthDate.getDate();
+                
+                    // Adjust months and years if current date is before birth date in the current year/month
+                    if (days < 0) {
+                        months--; // Decrement month if day is negative
+                        // Add days in the *previous* month to get correct days count
+                        const prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+                        days = prevMonthLastDay + days; // days is already negative, so it adds correctly
+                    }
+                
+                    if (months < 0) {
+                        years--; // Decrement year if month is negative
+                        months = 12 + months; // months is already negative, so it adds correctly
+                    }
+                
+                    // Format for British English (years, months, days)
+                    let ageString = '';
+                
+                    if (years > 0) {
+                        ageString += `${years} year${years !== 1 ? 's' : ''}`;
+                    }
+                    if (months > 0) {
+                        if (ageString) ageString += ', '; // Add comma if years were present
+                        ageString += `${months} month${months !== 1 ? 's' : ''}`;
+                    }
+                    if (days > 0) {
+                        if (ageString) ageString += ', '; // Add comma if years or months were present
+                        ageString += `${days} day${days !== 1 ? 's' : ''}`;
+                    }
+
+                    // If age is exactly 0 years, 0 months, 0 days (e.g., if checking on exact birthdate)
+                    if (years === 0 && months === 0 && days === 0) {
+                        ageString = 'Born today!'; // Or similar message
+                    } else if (!ageString) {
+                        // Fallback for very edge cases where all are 0 or negative after calculations
+                        ageString = 'Less than a day old'; // Or handle as appropriate
+                    }
+                
+                    ageElement.textContent = `age ${ageString}`;
+                }
+
+                // Run once on page load
+                calculateAndDisplayAge();
+
+                // Optional: Update every day (or more frequently for testing)
+                // To update exactly once a day at midnight, you'd calculate time until next midnight
+                // For simplicity, we can set an interval, but it's usually not necessary for age
+                // For a more precise "daily" update without continuous running:
+                // const now = new Date();
+                // const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+                // const msUntilMidnight = midnight.getTime() - now.getTime();
+                // setTimeout(() => {
+                //     calculateAndDisplayAge(); // Update at midnight
+                //     setInterval(calculateAndDisplayAge, 24 * 60 * 60 * 1000); // Then update every 24 hours
+                // }, msUntilMidnight);
+
+                // For testing/demonstration, you could use a shorter interval (e.g., every minute or second)
+                // setInterval(calculateAndDisplayAge, 60 * 1000); // Update every minute for more frequent testing feedback
+            });
+        </script>
         <script src="Scripts/darkmode.js"></script>
         <script src="Scripts/mobilemenu.js"></script>
         <script src="Scripts/navbar.js"></script>

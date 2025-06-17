@@ -1,103 +1,142 @@
-// navbar.js
+// My notes:
+// - This script loads the navbar HTML from different possible locations.
+// - Once the navbar is on the page, it sets up the dark mode toggle and the mobile menu.
 
 const navbarPathsToTry = [
-    '/navbar.html',            // absolute path to root
-    './navbar.html',           // relative (current folder)
-    '../navbar.html',          // one level up
-    '../../navbar.html',       // two levels up
-    '../../../navbar.html',    // three levels up
+    '/navbar.html',       // From the very top of the site
+    './navbar.html',      // In the same folder as the current page
+    '../navbar.html',     // One folder up
+    '../../navbar.html',  // Two folders up
+    '../../../navbar.html', // Three folders up
 ];
 
-async function loadNavbarAndInitializeMobileMenu() {
-    for (const path of navbarPathsToTry) {
-        try {
-            const res = await fetch(path);
-            if (res.ok) {
-                const data = await res.text();
-                document.getElementById("navbar").innerHTML = data;
+/**
+ * Note: This function tries to load the navbar HTML from our list of paths.
+ * If successful, it injects the HTML and then sets up dark mode and the mobile menu functionality.
+ */
+async function loadNavbarAndInitializeMobileMenu()
+{
+    for (const path of navbarPathsToTry)
+    {
+        try
+        {
+            const response = await fetch(path);
 
-                // --- Mobile Menu Initialization AFTER navbar is loaded ---
+            // If we successfully fetched the navbar HTML
+            if (response.ok)
+            {
+                const navbarHtml = await response.text();
+                // Put the navbar HTML into the 'navbar' div
+                document.getElementById("navbar").innerHTML = navbarHtml;
+
+                // --- Dark Mode Setup ---
+                // After the navbar loads, apply dark mode styles if needed.
+                // This makes sure the dark mode icon and colors are correct.
+                if (typeof window.applyDarkModeClasses === 'function')
+                {
+                    window.applyDarkModeClasses();
+                }
+
+                const darkModeToggleBtn = document.getElementById('dark-mode-toggle');
+
+                if (darkModeToggleBtn && typeof window.toggleDarkMode === 'function')
+                {
+                    // Add the click listener for the dark mode button.
+                    // We do this here because the button is part of the loaded navbar.
+                    darkModeToggleBtn.addEventListener('click', window.toggleDarkMode);
+                }
+                
+                else
+                {
+                    console.warn("Couldn't find the dark mode toggle button or the 'toggleDarkMode' function after loading the navbar.");
+                }
+
+                // --- Mobile Menu Setup ---
+                // Get the mobile menu elements now that they're on the page.
                 const menuBtn = document.getElementById('menu-toggle-btn');
                 const navMenu = document.getElementById('main-nav');
-                const body = document.body; // To disable scroll when menu is open
+                const body = document.body;
 
-                if (menuBtn && navMenu && body) { // Ensure elements exist
-                    menuBtn.addEventListener('click', () => {
+                if (menuBtn && navMenu && body)
+                {
+                    // When the menu button is clicked, open/close the mobile menu.
+                    menuBtn.addEventListener('click', () =>
+                    {
                         toggleMobileMenu(menuBtn, navMenu, body);
                     });
 
-                    // Event listener for clicking outside the menu to close it
-                    // We listen on the whole document
-                    document.addEventListener('click', (event) => {
-                        // Check if the click is outside the nav menu AND not on the menu button itself
-                        if (navMenu.classList.contains('active') && !navMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                    // If you click outside the open mobile menu, close it.
+                    document.addEventListener('click', (event) =>
+                    {
+                        if (navMenu.classList.contains('active') && !navMenu.contains(event.target) && !menuBtn.contains(event.target))
+                        {
                             closeMobileMenu(menuBtn, navMenu, body);
                         }
                     });
 
-                    // Event listener for clicks on navigation links (to close menu after selection)
+                    // If you click a link inside the mobile menu, close the menu.
                     const navLinks = document.querySelectorAll('#main-nav .nav-links a');
-                    navLinks.forEach(link => {
+                    navLinks.forEach(link =>
+                    {
                         link.addEventListener('click', () => {
                             closeMobileMenu(menuBtn, navMenu, body);
                         });
                     });
 
-                    // Ensure the dark mode toggle button in the mobile menu closes the menu
-                    const darkModeToggleBtn = document.querySelector('#main-nav .btn-toggle');
-                    if (darkModeToggleBtn) {
-                        darkModeToggleBtn.addEventListener('click', () => {
-                            // Call the actual toggleDarkMode function if it's globally accessible
-                            // (which it likely is if it's in your main script or loaded separately)
-                            if (typeof toggleDarkMode === 'function') {
-                                toggleDarkMode();
-                            }
+                    // Also close the mobile menu if the dark mode button is clicked while the menu is open.
+                    if (darkModeToggleBtn)
+                    {
+                        darkModeToggleBtn.addEventListener('click', () =>
+                        {
                             closeMobileMenu(menuBtn, navMenu, body);
                         });
                     }
                 }
-                // ----------------------------------------------------------
-                return; // Stop after successful load and initialization
+
+                // --- End Mobile Menu Setup ---
+                return; // Stop here, we've loaded the navbar.
             }
-        } catch (e) {
-            // Ignore and try next path
-            console.warn(`Failed to fetch navbar from ${path}:`, e); // Log for debugging
+        }
+        
+        catch (error)
+        {
+            // Log a warning if a path fails, but keep trying others.
+            console.warn(`Failed to fetch navbar from ${path}:`, error);
         }
     }
-    console.error("Failed to load navbar from all tried paths.");
+
+    // If none of the paths worked, show an error.
+    console.error("Couldn't load the navbar from any of the specified paths.");
 }
 
-// Function to toggle the mobile menu (now part of navbar.js)
-function toggleMobileMenu(menuBtn, navMenu, body) {
-    // You should pass menuBtn, navMenu, and body as arguments if they are not global
-    // but in this merged file, they can be directly accessed if defined higher up.
-    // For clarity and good practice, passing them as arguments is better.
+/**
+ * Note: This function opens or closes the mobile menu.
+ * It also handles preventing scrolling on the main page when the menu is open.
+ */
+function toggleMobileMenu(menuBtn, navMenu, body)
+{
     menuBtn.classList.toggle('active');
     navMenu.classList.toggle('active');
-
-    // Toggle ARIA expanded attribute for accessibility
     const isExpanded = navMenu.classList.contains('active');
-    menuBtn.setAttribute('aria-expanded', isExpanded);
+    menuBtn.setAttribute('aria-expanded', isExpanded); // Update for accessibility
 
-    // Prevent body scrolling when the menu is open
-    if (isExpanded) {
-        body.style.overflow = 'hidden';
-    } else {
-        body.style.overflow = ''; // Revert to default
-    }
+    // Stop scrolling on the main page if the menu is open.
+    body.style.overflow = isExpanded ? 'hidden' : '';
 }
 
-// Function to close the mobile menu (now part of navbar.js)
-function closeMobileMenu(menuBtn, navMenu, body) {
-    if (menuBtn && navMenu && navMenu.classList.contains('active')) {
+/**
+ * Note: This function closes the mobile menu if it's currently open.
+ */
+function closeMobileMenu(menuBtn, navMenu, body)
+{
+    if (menuBtn && navMenu && navMenu.classList.contains('active'))
+    {
         menuBtn.classList.remove('active');
         navMenu.classList.remove('active');
-        menuBtn.setAttribute('aria-expanded', false);
-        body.style.overflow = ''; // Re-enable body scrolling
+        menuBtn.setAttribute('aria-expanded', false); // Reset accessibility attribute
+        body.style.overflow = ''; // Allow body scrolling again
     }
 }
 
-// Ensure DOM is ready before trying to load and initialize, or just call directly if using 'defer'
+// When the page finishes loading, start the process of loading the navbar and setting up the menu.
 document.addEventListener('DOMContentLoaded', loadNavbarAndInitializeMobileMenu);
-// If your script tag for navbar.js has the 'defer' attribute, calling it directly here is also fine:
-// loadNavbarAndInitializeMobileMenu();

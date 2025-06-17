@@ -1,23 +1,32 @@
-// Scripts/discographyscript.js
-// Data for your releases - Add new releases here!
-import { releasesData } from './data.js';
+// My notes:
+// - Imports `releasesData` and `fetchReleasesData` from `data.js`.
+// - `releasesData` will hold all our music info once fetched.
+
+import { releasesData, fetchReleasesData } from './data.js';
 
 const releasesGrid = document.getElementById('releases-grid');
 const navButtons = document.querySelectorAll('.nav-btn');
 const noReleasesMessage = document.querySelector('.no-releases-message');
 
-function createReleaseCard(release) {
+/**
+ * Note: This function makes an HTML card for each release.
+ * It includes the cover, title, date, type, description, and some cool sparkles.
+ */
+function createReleaseCard(release)
+{
     const releaseItem = document.createElement('div');
     releaseItem.classList.add('release-item');
     releaseItem.setAttribute('data-id', release.id);
 
+    // Make some random sparkles for the album cover
     const numSparkles = 5;
     let sparklesHTML = '';
-    for (let i = 0; i < numSparkles; i++) {
+    for (let i = 0; i < numSparkles; i++)
+    {
         const x = Math.random() * 100;
         const y = Math.random() * 100;
-        const size = Math.random() * 8 + 4;
-        const delay = Math.random() * 0.5;
+        const size = Math.random() * 8 + 4; // Sparkle size 4-12px
+        const delay = Math.random() * 0.5; // Stagger their animation
         sparklesHTML += `<span class="sparkle" style="left:${x}%; top:${y}%; width:${size}px; height:${size}px; animation-delay: ${delay}s;"></span>`;
     }
 
@@ -35,75 +44,106 @@ function createReleaseCard(release) {
             </div>
         </a>
     `;
+
     return releaseItem;
 }
 
-function displayReleases(category) {
-    releasesGrid.innerHTML = ''; // Clear current releases
-    let filteredReleases = [];
+/**
+ * Note: This function shows releases based on the selected category (e.g., "singles," "albums").
+ * It sorts them by date (newest first) and handles showing a "no releases" message if needed.
+ */
+function displayReleases(category)
+{
+    releasesGrid.innerHTML = ''; // Clear out old releases
 
-    // Define the types to show on the discography page
-    const allowedTypes = ['single', 'ep', 'album', 'collab']; // Added 'ep' and 'album' assuming you have these too
+    // Only show these types of releases on the main discography page
+    const allowedTypes = ['single', 'ep', 'album', 'collab'];
 
-    if (category === 'all') {
-        // Filter out 'album-track' and then sort
-        filteredReleases = releasesData
-            .filter(release => allowedTypes.includes(release.type)) // Exclude 'album-track' here
-            .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
-    } else {
-        // Filter by category and exclude 'album-track' if the category isn't specifically 'album-track'
-        filteredReleases = releasesData
-            .filter(release => release.type === category && allowedTypes.includes(release.type))
-            .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
-    }
+    // Filter releases by type and category, then sort by date
+    const filteredReleases = releasesData
+        .filter
+        (release =>
+            allowedTypes.includes(release.type) && // Make sure it's an allowed type
+            (category === 'all' || release.type === category) // Apply category filter
+        )
+        .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)); // Newest first
 
-    // Check if there are 1, 2, or 3 releases to apply specific grid behavior
-    if (filteredReleases.length === 1) { // Only apply this if there's exactly one item
+    // Adjust grid layout if there's only one item
+    if (filteredReleases.length === 1)
+    {
         releasesGrid.classList.add('single-item-grid');
-    } else {
+    }
+    
+    else
+    {
         releasesGrid.classList.remove('single-item-grid');
     }
 
-    if (filteredReleases.length === 0) {
+    // Show/hide the "No Releases" message
+    if (filteredReleases.length === 0)
+    {
         noReleasesMessage.style.display = 'block';
-    } else {
+    }
+    
+    else
+    {
         noReleasesMessage.style.display = 'none';
-        filteredReleases.forEach((release, index) => {
-            const card = createReleaseCard(release);
-            card.style.animationDelay = `${index * 0.1}s`; // Stagger animation
-            releasesGrid.appendChild(card);
-        });
+        // Add each release card to the page with a slight delay for a cool effect
+        filteredReleases.forEach
+        ((release, index) =>
+            {
+                const card = createReleaseCard(release);
+                card.style.animationDelay = `${index * 0.1}s`; // Staggered fade-in
+                releasesGrid.appendChild(card);
+            }
+        );
     }
 }
 
-// Event Listeners for navigation buttons
-navButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Remove active class from all buttons
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        // Add active class to clicked button
-        button.classList.add('active');
+// Listen for clicks on our navigation buttons
+navButtons.forEach
+(button =>
+    {
+        button.addEventListener
+        ('click', () =>
+            {
+                // Remove 'active' class from all buttons, then add it to the clicked one
+                navButtons.forEach
+                    (
+                        btn => btn.classList.remove('active')
+                    );
+                button.classList.add('active');
 
-        const category = button.getAttribute('data-category');
+                const category = button.getAttribute('data-category');
 
-        // Add a class for animating out old releases
-        releasesGrid.classList.add('fade-out');
+                // Start a fade-out animation for the current releases
+                releasesGrid.classList.add('fade-out');
 
-        setTimeout(() => {
-            displayReleases(category);
-            // Remove fade-out and add fade-in for new releases
-            releasesGrid.classList.remove('fade-out');
-            releasesGrid.classList.add('fade-in');
+                // After the fade-out, update the content and start fade-in
+                setTimeout
+                (() =>
+                    {
+                        displayReleases(category);
 
-            // Remove fade-in class after animation
-            setTimeout(() => {
-                releasesGrid.classList.remove('fade-in');
-            }, 500); // Should match CSS transition duration
-        }, 300); // Delay for fade-out effect before new content loads
-    });
-});
+                        releasesGrid.classList.remove('fade-out');
+                        releasesGrid.classList.add('fade-in');
 
-// Initial display of releases when the page loads (defaults to 'all')
-document.addEventListener('DOMContentLoaded', () => {
-    displayReleases('all');
+                        // Once the fade-in is done, remove the class to reset
+                        setTimeout(() =>
+                        {
+                            releasesGrid.classList.remove('fade-in');
+                        }, 500); // Matches CSS fade-in duration
+                    }, 
+                    300
+                );
+            }
+        );
+    }
+);
+
+// When the page loads, first get the data, then show all releases.
+document.addEventListener('DOMContentLoaded', async () =>
+{
+    await fetchReleasesData(); // Wait for data to be ready
+    displayReleases('all'); // Then show everything
 });
